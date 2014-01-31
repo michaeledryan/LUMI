@@ -1,4 +1,4 @@
-#include <Adafruit_NeoPixel.h>
+  #include <Adafruit_NeoPixel.h>
 
 #define START_CMD_CHAR 'a'
 #define PIN_HIGH 'b'
@@ -24,20 +24,18 @@ void loop(){
   Serial.flush();
   int pin_num = 0;
   int pin_val = 0;
-  
+    
   if(Serial.available()<1){ return;}
   sdata = Serial.read();
-
-  // This setup means we buffer requests instead of fulfilling them instantly.
-  // Is that a problem?  
+  
   if(sdata != START_CMD_CHAR){
-    theaterChase(strip.Color(127, 127, 127), 50); // White
-    return;
-  }
+  theaterChase(strip.Color(127, 127, 127), 50); // White
+  return;}
   
   delay(20);
-
+  //Serial.println("we're good");
   pin_num = Serial.read();
+  //pin_val = Serial.read();
   if(pin_num == 'r'){
     colorWipe(strip.Color(255, 0, 0), 50); // Red
   }
@@ -47,10 +45,9 @@ void loop(){
   else if(pin_num == 'g'){
     colorWipe(strip.Color(0, 255, 0), 50); // Green
   }
-  else if (pin_num == 'z') {
-    theaterChaseRainbow(100);
-  }
-  
+  else{
+    return;}
+    
 } 
 
 void colorWipe(uint32_t c, uint8_t wait) {
@@ -58,24 +55,6 @@ void colorWipe(uint32_t c, uint8_t wait) {
       strip.setPixelColor(i, c);
       strip.show();
       delay(wait);
-  }
-}
-
-//Theatre-style crawling lights with rainbow effect
-void theaterChaseRainbow(uint8_t wait) {
-  for (int j=0; j < 256; j++) {     // cycle all 256 colors in the wheel
-    for (int q=0; q < 3; q++) {
-        for (int i=0; i < strip.numPixels(); i=i+3) {
-          strip.setPixelColor(i+q, Wheel( (i+j) % 255));    //turn every third pixel on
-        }
-        strip.show();
-       
-        delay(wait);
-       
-        for (int i=0; i < strip.numPixels(); i=i+3) {
-          strip.setPixelColor(i+q, 0);        //turn every third pixel off
-        }
-    }
   }
 }
 
