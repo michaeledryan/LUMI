@@ -11,8 +11,7 @@ int pin7 = 12;
 int pin8 = 13;
 
 int buttonPin = 2;
-int buttonState;
-int lastButtonState = LOW;
+int lastButtonState;
 
 long lastDebounceTime = 0;  // the last time the output pin was toggled
 long debounceDelay = 50;    // the debounce time; increase if the output flickers
@@ -33,34 +32,29 @@ void setup(){
   pinMode(pin7, OUTPUT);
   pinMode(pin8, OUTPUT);
   pinMode(buttonPin, INPUT);
+  lastButtonState = digitalRead(buttonPin);
 }
 
 void loop(){
   
   int reading = digitalRead(buttonPin);
 
-  if (reading != lastButtonState) {
-    lastDebounceTime = millis();
-  }
-
   if ((millis() - lastDebounceTime) > debounceDelay) {
     // whatever the reading is at, it's been there for longer
     // than the debounce delay, so take it as the actual current state:
 
     // if the button state has changed:
-    if (reading != buttonState) {
-      buttonState = reading;
+    if (reading != 1) {      
 
-      // only toggle the LED if the new button state is HIGH
-      if (buttonState == HIGH) {
-        twinkle = !twinkle;
-      }
+      lastDebounceTime = millis();
+      twinkle = !twinkle;
+
     }
   }
 
   if (!twinkle) {
     writeSolid();
-    delay(1000);
+    delay(200);
 
   } else {
 
@@ -75,7 +69,6 @@ void loop(){
 
   }
 }
-
 
 
 void writeSolid(){
