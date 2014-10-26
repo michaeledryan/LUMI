@@ -6,12 +6,44 @@ int redPin = 3;
 int greenPin = 5;
 int bluePin = 6;
 
-int redTwo = 11;
-int greenTwo = 9;
-int blueTwo = 10;
+void setup(){
+  Serial.begin(9600);
+  pinMode(3, OUTPUT);
+  pinMode(5, OUTPUT);
+  pinMode(6, OUTPUT);
+}
 
+void loop() {
+  unsigned int rgbColour[3];
+ 
+  // Start off with red.
+  rgbColour[0] = 255;
+  rgbColour[1] = 0;
+  rgbColour[2] = 0;  
+ 
+  // Choose the colours to increment and decrement.
+  for (int decColour = 0; decColour < 2; decColour += 1) {
+    int incColour = decColour == 1 ? 0 : decColour + 1;
+ 
+    // cross-fade the two colours.
+    for(int i = 0; i < 255; i += 1) {
+      rgbColour[decColour] -= 1;
+      rgbColour[incColour] += 1;
+      
+      setColourRgb(rgbColour[0], rgbColour[1], rgbColour[0]);
+      delay(20);
+    }
+  }
+}
 
+ 
+void setColourRgb(unsigned int red, unsigned int green, unsigned int blue) {
+  analogWrite(redPin, red);
+  analogWrite(greenPin, green);
+  analogWrite(bluePin, blue);
+ }
 
+/*
 void setup(){
   Serial.begin(9600);
   pinMode(redPin, OUTPUT);
@@ -27,14 +59,12 @@ void loop(){
   int pin_num = 0;
   int pin_val = 0;
   
+
   if(Serial.available()<1){ return;}
   sdata = Serial.read();
   
-  if(sdata != START_CMD_CHAR){
-    writeColor(255, 0, 255);// Invalid command
-  return;}
+  if(sdata != START_CMD_CHAR){ return;}
   
-  delay(20);
   pin_num = Serial.read();
   if(pin_num == 'r'){
     writeColor(255, 0, 0);
@@ -72,4 +102,4 @@ void writeColor(int r, int g, int b){
   analogWrite(greenTwo, g);
   analogWrite(bluePin, b);
   analogWrite(blueTwo, b);
-}
+}*/
